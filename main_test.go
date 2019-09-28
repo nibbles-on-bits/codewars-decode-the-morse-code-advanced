@@ -7,6 +7,27 @@ import (
 
 func TestDecodeMorse(t *testing.T) {
 	type TestCase struct {
+		morse string
+		alpha string
+	}
+
+	testCases := []TestCase {
+		{".... . -.--  .--- ..- -.. .", "HEY JUDE"},
+	}
+
+	for _, tc := range testCases {
+		got := DecodeMorse(tc.morse)
+		want := tc.alpha
+
+		if got != want {
+			t.Errorf("morse: %v\ngot: %v\nwant: %v", tc.morse, got, want)
+		}
+	}
+
+}
+
+func TestDecodeBits(t *testing.T) {
+	type TestCase struct {
 		bits string
 		morse string
 	}
@@ -14,12 +35,12 @@ func TestDecodeMorse(t *testing.T) {
 	testCases := []TestCase {
 		{
 			bits: "1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011", 
-			morse: ".... . -.--  ",
+			morse: ".... . -.--  .--- ..- -.. .",
 		},
 	}
 
 	for _, tc := range testCases {
-		got := DecodeMorse(tc.bits)
+		got := DecodeBits(tc.bits)
 		want := tc.morse
 
 		if got != want {
