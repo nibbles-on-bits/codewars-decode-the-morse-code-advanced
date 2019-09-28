@@ -111,21 +111,25 @@ func BitLetterToMorseCodeLetter(bitSequence string) string {
 // DiscoverTimingFromBitSentence will determine the number of characters that represents
 // a single unit of time.
 func GetTimingFromBitSentence(bitSentence string) int {
-	fmt.Println("GetTimingFromBitSentence() called, bitSentence=%v\n", bitSentence)
+	fmt.Printf("GetTimingFromBitSentence() called, bitSentence=%v\n", bitSentence)
 	if len(bitSentence)<=2 { return 1}
+	if bitSentence[0:2] == "10" {
+		 return 1 
+	}
+
 	ret := 9999
-	lastChar := '0'
+	lastChar := ' '
 	count := 0
 	
 	for _, v := range bitSentence {
-		if (v=='1') {
+		if (v=='0') {
 			count++
-			lastChar = '1'
-		} else if (v == '0') {
-			if (lastChar == '1') {
+			lastChar = '0'
+		} else if (v == '1') {
+			if (lastChar == '0') {
 				if count < ret { ret = count }	
 			}
-			lastChar = '0'
+			lastChar = '1'
 			count = 0
 		}
 		
