@@ -6,14 +6,12 @@ import (
 )
 
 func main() {
-	test := "1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011"
-	fmt.Println(getWordsFromBitSentence(test))
+	fmt.Println("codewars-decode-the-morse-code-advanced.  Please run unit test")
 }
 
 //DecodeMorse will take a Morse encoded sentence in the form of
 // .'s and -'s and return the alphabetic version.
 func DecodeMorse(morseCode string) string {
-	fmt.Printf("DecodeMorse called.  morseCode=%v\n",morseCode)
 	ret := ""
 
 	words := strings.Split(morseCode, "  ")
@@ -21,7 +19,6 @@ func DecodeMorse(morseCode string) string {
 	for _, word := range words {
 		letters := strings.Split(word, " ")
 		for _, char := range letters {
-			fmt.Println(char)
 			ret += string(MorseCodeLookupChar(char))
 		}
     ret += " "
@@ -71,29 +68,6 @@ func ShrinkBitSentence(bitSentence string, timing int) string {
 }
 
 
-
-func getWordsFromBitSentence(bitSentence string) []string {
-	ret := []string{}
-		
-	timing := GetTimingFromBitSentence(bitSentence)
-	shrunk := ShrinkBitSentence(bitSentence, timing)		// some translators are slower than others
-	bitWords := strings.Split(shrunk, "0000000")				// break apart the words
-
-	for _, bitWord := range bitWords {
-		fmt.Printf("mcWord = %v\n", bitWord)
-		bitLetters := strings.Split(bitWord, "000")
-		for _, bitLetter := range bitLetters {
-			morseLetter := BitLetterToMorseCodeLetter(bitLetter)
-			fmt.Printf("morseLetter = %v\n", morseLetter)
-			//ret += string(MorseCodeLookupChar(morseLetter))
-		}
-		
-		//fmt.Println(bitLetters)
-	}
-
-	return ret
-}
-
 // BitLetterToMorseCodeLetter will take a string in the form of "10101010" and convert to morse code "...."
 //  or 10111 to ".-" 
 func BitLetterToMorseCodeLetter(bitSequence string) string {
@@ -108,34 +82,65 @@ func BitLetterToMorseCodeLetter(bitSequence string) string {
 	return ret
 }
 
-// DiscoverTimingFromBitSentence will determine the number of characters that represents
+// GetTimingFromBitSentence will determine the number of characters that represents
 // a single unit of time.
 func GetTimingFromBitSentence(bitSentence string) int {
-	fmt.Printf("GetTimingFromBitSentence() called, bitSentence=%v\n", bitSentence)
+
+	bitSentence = strings.Trim(bitSentence, "0")
+	// Strip leading and trailing 0's off
+	// Find the smallest grouping of 0's
+	// Find the smallest grouping of 1's
+	// return the smaller of the two
 	if len(bitSentence)<=2 { return 1}
 	if bitSentence[0:2] == "10" {
-		 return 1 
-	}
+		return 1 
+   }
 
-	ret := 9999
+
 	lastChar := ' '
-	count := 0
-	
-	for _, v := range bitSentence {
-		if (v=='0') {
-			count++
-			lastChar = '0'
-		} else if (v == '1') {
-			if (lastChar == '0') {
-				if count < ret { ret = count }	
-			}
-			lastChar = '1'
-			count = 0
+	smallestGroup0s := 99999
+	smallestGroup1s := 99999
+
+
+	g0 := 0
+	g1 := 0
+
+	for _, thisChar := range bitSentence {
+
+		if thisChar=='0' { g0++ }
+		if thisChar=='1' { g1++ }
+
+		if thisChar == '0' && lastChar == '1' {
+			if g1 < smallestGroup1s {
+				smallestGroup1s = g1
+			}	
+			g1 = 0	//reset
 		}
-		
+
+		if thisChar == '1' && lastChar == '0' {
+			if g0 < smallestGroup0s {
+				smallestGroup0s = g0
+			}
+			g0 = 0 // reset
+		}
+
+		lastChar = thisChar
+
 	}
 
-	return ret
+	if (smallestGroup1s == 99999) {
+		smallestGroup1s = g1
+	}
+	
+	if smallestGroup0s <= smallestGroup1s {
+		return smallestGroup0s
+	}
+
+	if smallestGroup1s < smallestGroup0s {
+		return smallestGroup1s
+	}
+
+	return 1
 }
 
 func MorseCodeLookupChar(seq string) byte {
@@ -147,7 +152,7 @@ func MorseCodeLookupChar(seq string) byte {
 		"-.-."	:'C',
 		"-.."	:'D',
 		"."		:'E',
-		"..=."	:'F',
+		"..-."	:'F',
 		"--."	:'G',
 		"...."	:'H',
 		".."	:'I',
@@ -172,7 +177,6 @@ func MorseCodeLookupChar(seq string) byte {
 	}
 
 	ret = m[seq]
-	//fmt.Println()
 
 	return ret
 }
