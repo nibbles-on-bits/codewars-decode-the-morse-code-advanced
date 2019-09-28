@@ -13,19 +13,22 @@ func main() {
 //DecodeMorse will take a Morse encoded sentence in the form of
 // .'s and -'s and return the alphabetic version.
 func DecodeMorse(morseCode string) string {
+	fmt.Printf("DecodeMorse called.  morseCode=%v\n",morseCode)
 	ret := ""
 
 	words := strings.Split(morseCode, "  ")
+  
 	for _, word := range words {
 		letters := strings.Split(word, " ")
 		for _, char := range letters {
 			fmt.Println(char)
 			ret += string(MorseCodeLookupChar(char))
 		}
+    ret += " "
 	}
 
 
-	return ret
+	return strings.Trim(ret," ")
 }
 
 //DecodeBits will take a string in the form of 1's and 0's and
@@ -108,6 +111,8 @@ func BitLetterToMorseCodeLetter(bitSequence string) string {
 // DiscoverTimingFromBitSentence will determine the number of characters that represents
 // a single unit of time.
 func GetTimingFromBitSentence(bitSentence string) int {
+	fmt.Println("GetTimingFromBitSentence() called, bitSentence=%v\n", bitSentence)
+	if len(bitSentence)<=2 { return 1}
 	ret := 9999
 	lastChar := '0'
 	count := 0
@@ -159,6 +164,7 @@ func MorseCodeLookupChar(seq string) byte {
 		"-..-"	:'X',
 		"-.--"	:'Y',
 		"--.."	:'Z',
+		".-.-.-":'.',
 	}
 
 	ret = m[seq]
