@@ -5,10 +5,30 @@ import (
 	"fmt"
 )
 
+func TestDecodeMorse(t *testing.T) {
+	type TestCase struct {
+		bits string
+		morse string
+	}
 
-func TestGetWordsFromBitSentence() {
+	testCases := []TestCase {
+		{
+			bits: "1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011", 
+			morse: ".... . -.--  ",
+		},
+	}
+
+	for _, tc := range testCases {
+		got := DecodeMorse(tc.bits)
+		want := tc.morse
+
+		if got != want {
+			t.Errorf("bits: %v\ngot: %v\nwant: %v", tc.bits, got, want)
+		}
+	}
 
 }
+
 
 func TestDiscoverTimingFromBitSentence(t *testing.T) {
 	type TestCase struct {
@@ -59,19 +79,20 @@ func TestShrinkBitSentence(t *testing.T) {
 
 }
 
-func TestBitStringToMorseCodeString(t *testing.T) {
+func TestBitLetterToMorseCodeLetter(t *testing.T) {
 	type TestCase struct {
 		onesAndZeros string
 		dotsAndDashes string
 	}
 
 	testCases := []TestCase {
+		{"1011101110111", ".---"},
 		{"10101010", "...."},
-		{"11101010", "-..."},
+		{"111010101", "-..."},
 	}
 
 	for _, tc := range testCases {
-		got := BitStringToMorseCodeString(tc.onesAndZeros)
+		got := BitLetterToMorseCodeLetter(tc.onesAndZeros)
 		want := tc.dotsAndDashes
 
 		if got != want {
@@ -80,7 +101,7 @@ func TestBitStringToMorseCodeString(t *testing.T) {
 	}
 
 
-	got := BitStringToMorseCodeString("1010101")
+	got := BitLetterToMorseCodeLetter("1010101")
 	fmt.Println(got)
 }
 
