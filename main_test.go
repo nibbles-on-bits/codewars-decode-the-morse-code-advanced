@@ -5,6 +5,26 @@ import (
 	"fmt"
 )
 
+func TestGetTimingFromBitSentence(t *testing.T) {
+	type TestCase struct {
+		bits string
+		timing int
+	}
+
+	testCases := []TestCase {
+		{"1110111", 1},
+	}
+
+	for _, tc := range testCases {
+		got := GetTimingFromBitSentence(tc.bits)
+		want := tc.timing
+
+		if got != want {
+			t.Errorf("bits: %v\ngot: %v\nwant: %v", tc.bits, got, want)
+		}
+	}
+}
+
 func TestDecodeMorse(t *testing.T) {
 	type TestCase struct {
 		morse string
@@ -12,7 +32,12 @@ func TestDecodeMorse(t *testing.T) {
 	}
 
 	testCases := []TestCase {
-		{".... . -.--  .--- ..- -.. .", "HEY JUDE"},
+		//{".... . -.--  .--- ..- -.. .", "HEY JUDE"},
+		{".", "E"},
+		{"..", "I"},
+		{". .", "EE"},
+		{".-", "A"},
+
 	}
 
 	for _, tc := range testCases {
